@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "comfyui-universal-video-io"
+version = "0.1.0"
+description = "ComfyUI custom nodes for universal video import/export workflows"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Universal Video IO" }]
+dependencies = [
+  "imageio>=2.34.0",
+  "imageio-ffmpeg>=0.5.1",
+  "numpy>=1.24.0",
+]
+
+[project.urls]
+Repository = "https://github.com/your-org/ComfyUI-UniversalVideoIO"
+
+[tool.setuptools]
+py-modules = ["__init__"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["core*", "nodes*"]

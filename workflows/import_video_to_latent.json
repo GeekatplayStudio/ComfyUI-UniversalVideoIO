@@ -1,0 +1,4 @@
+{
+  "name": "import_video_to_latent",
+  "description": "UV_LoadVideo -> UV_ImageBatchToLatent pipeline example."
+}

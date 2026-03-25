@@ -1,0 +1,4 @@
+{
+  "name": "export_master_basic",
+  "description": "Use UV_SaveMaster to export ProRes 422 HQ or ProRes 4444."
+}
