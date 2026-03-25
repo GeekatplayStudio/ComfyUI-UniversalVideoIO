@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/your-org/ComfyUI-UniversalVideoIO"
+Repository = "https://github.com/GeekatplayStudio/ComfyUI-UniversalVideoIO"
 
 [tool.setuptools]
 py-modules = ["__init__"]
