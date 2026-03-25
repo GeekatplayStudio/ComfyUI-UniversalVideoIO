@@ -2,6 +2,8 @@
 
 Dedicated ComfyUI custom node pack for production-ready video import/export with FFmpeg profiles, mastering presets, sequence output, and image-batch-to-latent workflows.
 
+Maintained by **Geekatplay Studio**.
+
 ## Nodes
 - UV_LoadVideo
 - UV_SaveVideo
