@@ -1,13 +1,17 @@
 try:
     from .save_video import UV_SaveVideo
+    from .save_sequence import UV_SaveSequence
 except Exception:  # pragma: no cover
     from nodes.save_video import UV_SaveVideo
+    from nodes.save_sequence import UV_SaveSequence
 
 
 MASTER_PRESETS = {
     "Editorial Master — ProRes 422 HQ": "prores_422hq_master",
     "Alpha Master — ProRes 4444": "prores_4444_alpha",
     "Post Master — DNxHR HQ": "dnxhr_hq_master",
+    "Post Master — DNxHR HQX": "dnxhr_hqx_master",
+    "Archive Frames — PNG Sequence": "png_sequence",
     "YouTube MP4": "youtube_h264",
 }
 
@@ -33,6 +37,22 @@ class UV_SaveMaster:
 
     def __init__(self):
         self._save_video = UV_SaveVideo()
+        self._save_sequence = UV_SaveSequence()
 
     def save_master(self, images, output_path, preset, fps=24.0, overwrite=True):
-        return self._save_video.save(images, output_path, MASTER_PRESETS[preset], fps, overwrite, "")
+        if MASTER_PRESETS[preset] == "png_sequence":
+            return self._save_sequence.save_sequence(images, output_path, "png", "frame_[counter]", 6)
+        return self._save_video.save(
+            images=images,
+            output_path=output_path,
+            profile=MASTER_PRESETS[preset],
+            fps=fps,
+            quality_mode="preset",
+            overwrite=overwrite,
+            audio_mode="none",
+            pix_fmt="auto",
+            color_range="auto",
+            colorspace="auto",
+            audio_path="",
+            advanced_quality_args="",
+        )

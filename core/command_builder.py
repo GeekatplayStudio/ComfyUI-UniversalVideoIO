@@ -13,6 +13,10 @@ def build_video_command(
     profile_name,
     overwrite=True,
     audio_path=None,
+    pix_fmt_override="auto",
+    quality_args_override="",
+    color_range="auto",
+    colorspace="auto",
 ):
     profile = get_profile(profile_name)
     cmd = [ffmpeg_path, "-hide_banner", "-loglevel", "error"]
@@ -20,12 +24,20 @@ def build_video_command(
     cmd += ["-framerate", str(fps), "-i", input_pattern]
     if audio_path:
         cmd += ["-i", audio_path, "-shortest"]
+    pix_fmt = profile["pix_fmt"] if pix_fmt_override == "auto" else pix_fmt_override
+    quality_args = profile["quality_args"]
+    if quality_args_override.strip():
+        quality_args = quality_args_override.strip().split()
     cmd += [
         "-c:v",
         profile["vcodec"],
         "-pix_fmt",
-        profile["pix_fmt"],
-        *profile["quality_args"],
-        output_path,
+        pix_fmt,
+        *quality_args,
     ]
+    if color_range != "auto":
+        cmd += ["-color_range", color_range]
+    if colorspace != "auto":
+        cmd += ["-colorspace", colorspace]
+    cmd += [output_path]
     return cmd

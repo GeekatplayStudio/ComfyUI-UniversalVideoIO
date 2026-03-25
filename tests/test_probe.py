@@ -8,3 +8,11 @@ from core.ffmpeg_probe import get_ffmpeg_path
 
 def test_ffmpeg_path_resolves():
     assert get_ffmpeg_path()
+
+
+def test_ffmpeg_ready_payload_shape():
+    from core.ffmpeg_probe import ensure_ffmpeg_ready
+
+    payload = ensure_ffmpeg_ready()
+    assert "ffmpeg_path" in payload
+    assert "encoders" in payload

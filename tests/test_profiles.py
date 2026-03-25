@@ -9,5 +9,6 @@ from core.encoder_profiles import get_profile, list_profiles
 def test_profiles_include_expected_keys():
     profiles = list_profiles()
     assert "youtube_h264" in profiles
+    assert "dnxhr_hqx_master" in profiles
     p = get_profile("prores_422hq_master")
     assert p["container"] == "mov"

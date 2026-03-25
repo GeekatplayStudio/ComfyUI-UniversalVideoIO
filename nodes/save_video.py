@@ -27,10 +27,16 @@ class UV_SaveVideo:
                 "output_path": ("STRING", {"default": "output.mp4"}),
                 "profile": (list_profiles(),),
                 "fps": ("FLOAT", {"default": 24.0, "min": 1.0, "max": 240.0}),
+                "quality_mode": (["preset", "advanced"],),
                 "overwrite": ("BOOLEAN", {"default": True}),
+                "audio_mode": (["none", "mux"],),
+                "pix_fmt": (["auto", "yuv420p", "yuv420p10le", "yuv422p10le", "yuva444p10le"],),
+                "color_range": (["auto", "tv", "pc"],),
+                "colorspace": (["auto", "bt709", "bt2020nc", "smpte170m"],),
             },
             "optional": {
                 "audio_path": ("STRING", {"default": ""}),
+                "advanced_quality_args": ("STRING", {"default": ""}),
             },
         }
 
@@ -40,11 +46,27 @@ class UV_SaveVideo:
     CATEGORY = "UniversalVideoIO"
     OUTPUT_NODE = True
 
-    def save(self, images, output_path, profile, fps=24.0, overwrite=True, audio_path=""):
+    def save(
+        self,
+        images,
+        output_path,
+        profile,
+        fps=24.0,
+        quality_mode="preset",
+        overwrite=True,
+        audio_mode="none",
+        pix_fmt="auto",
+        color_range="auto",
+        colorspace="auto",
+        audio_path="",
+        advanced_quality_args="",
+    ):
         images = ensure_image_batch(images)
         if not output_path:
             raise ValueError("output_path is required")
-        if audio_path and not Path(audio_path).exists():
+        if audio_mode == "mux" and not audio_path:
+            raise ValueError("audio_path is required when audio_mode is 'mux'")
+        if audio_mode == "mux" and audio_path and not Path(audio_path).exists():
             raise FileNotFoundError(f"audio_path not found: {audio_path}")
 
         data = images.detach().cpu().numpy()
@@ -63,7 +85,11 @@ class UV_SaveVideo:
             fps=fps,
             profile_name=profile,
             overwrite=overwrite,
-            audio_path=audio_path or None,
+            audio_path=(audio_path or None) if audio_mode == "mux" else None,
+            pix_fmt_override=pix_fmt,
+            quality_args_override=advanced_quality_args if quality_mode == "advanced" else "",
+            color_range=color_range,
+            colorspace=colorspace,
         )
         proc = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if proc.returncode != 0:
